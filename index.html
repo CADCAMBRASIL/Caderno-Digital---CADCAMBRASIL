@@ -6,8 +6,8 @@
     <title>Caderno CNC - Profº Fernando - CADCAM BRASIL</title>
     <style>
         :root { 
-            --primary: #1a252f; 
-            --accent: #27ae60; 
+            --primary: #000000; 
+            --accent: #000000; 
             --bg: #f4f7f6; 
         }
 
@@ -33,7 +33,7 @@
 
         .sidebar-title {
             text-align: center; 
-            border-bottom: 1px solid #34495e; 
+            border-bottom: 1px solid #FAFAFA; 
             padding-bottom: 10px;
             font-weight: bold;
             margin-bottom: 10px;
@@ -48,7 +48,7 @@
             width: 100%;
             padding: 10px; 
             margin: 4px 0; 
-            background: #2c3e50; 
+            background: #708090; 
             border: none; 
             color: white; 
             cursor: pointer; 
@@ -64,7 +64,7 @@
         .logo-container { 
             padding-top: 20px; 
             text-align: center;
-            border-top: 1px solid #34495e;
+            border-top: 1px solid #FFFFFF;
         }
         .logo-empresa { max-width: 90%; height: auto; }
 
@@ -77,14 +77,14 @@
             justify-content: space-between; 
             align-items: center; 
             padding: 10px 20px; 
-            background: white;
+            background: #DCDCDC;
             border-bottom: 1px solid #ddd;
             gap: 15px;
         }
         
         .input-aluno {
             padding: 10px 15px;
-            border: 2px solid #bdc3c7;
+            border: 2px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
             flex: 1;
@@ -105,7 +105,7 @@
         /* Área do Desenho Técnico */
         #container-desenho { 
             height: 40%; 
-            background: white; 
+            background: #DCDCDC; 
             margin: 10px; 
             border-radius: 8px; 
             border: 2px solid #bdc3c7; 
@@ -124,14 +124,14 @@
             gap: 20px; 
             padding: 15px; 
             overflow-y: auto; 
-            background: #fff; 
+            background: #DCDCDC; 
             margin: 0 10px; 
             border-radius: 8px 8px 0 0; 
             border: 1px solid #ddd; 
         }
         .coluna { display: flex; flex-direction: column; }
         .linha-cnc { display: flex; align-items: center; margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; }
-        .n-label { width: 55px; font-family: 'Courier New', monospace; color: #7f8c8d; font-weight: bold; }
+        .n-label { width: 55px; font-family: 'Courier New', monospace; color: #000000; font-weight: bold; }
         .input-cnc { 
             flex: 1; 
             border: none; 
@@ -140,20 +140,22 @@
             font-size: 16px; 
             outline: none; 
             text-transform: uppercase; 
-            color: #2980b9; 
-        }
+            color: #000000; 
+        font-weight: 900; /* Negrito extra forte */
+    font-size: 15px; /* Aumenta um pouco para ser mais nítido */
+}
 
         /* Rodapé */
         #footer { 
             padding: 15px; 
-            background: #fff; 
+            background: #DCDCDC; 
             border-top: 1px solid #ddd; 
             display: flex; 
             justify-content: flex-end; 
             margin: 0 10px 10px 10px; 
             border-radius: 0 0 8px 8px; 
         }
-        .btn-save { background: #d35400; color: white; padding: 12px 35px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-save { background: #000000; color: white; padding: 12px 35px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -183,7 +185,7 @@
         </div>
 
         <div id="footer">
-            <button class="btn-save" onclick="gerarTXT()">DESCARREGAR TXT</button>
+            <button class="btn-save" onclick="gerarTXT()">BAIXAR TXT</button>
         </div>
     </div>
 
@@ -228,6 +230,7 @@
                 else col2.appendChild(div);
                 n += 10;
             }
+
         }
 
         function mudarExercicio(id) {
