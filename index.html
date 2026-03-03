@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caderno CNC - Profº Fernando - CADCAM BRASIL</title>
+    <style>
+        :root { 
+            --primary: #1a252f; 
+            --accent: #27ae60; 
+            --bg: #f4f7f6; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            display: flex; 
+            height: 100vh; 
+            margin: 0; 
+            background: var(--bg); 
+            overflow: hidden; 
+        }
+        
+        /* Barra Lateral */
+        #sidebar { 
+            width: 250px; 
+            background: var(--primary); 
+            color: white; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-title {
+            text-align: center; 
+            border-bottom: 1px solid #34495e; 
+            padding-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .lista-exercicios {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .ex-btn { 
+            width: 100%;
+            padding: 10px; 
+            margin: 4px 0; 
+            background: #2c3e50; 
+            border: none; 
+            color: white; 
+            cursor: pointer; 
+            text-align: left; 
+            border-radius: 4px; 
+            transition: 0.3s; 
+            font-size: 0.85em;
+        }
+
+        .ex-btn:hover { background: var(--accent); }
+        .active { background: var(--accent); font-weight: bold; }
+
+        .logo-container { 
+            padding-top: 20px; 
+            text-align: center;
+            border-top: 1px solid #34495e;
+        }
+        .logo-empresa { max-width: 90%; height: auto; }
+
+        /* Painel Principal */
+        #main { flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        
+        /* Cabeçalho */
+        .header-exercicio { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 20px; 
+            background: white;
+            border-bottom: 1px solid #ddd;
+            gap: 15px;
+        }
+        
+        .input-aluno {
+            padding: 10px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            flex: 1;
+            max-width: 350px;
+            outline: none;
+        }
+        .input-aluno:focus { border-color: var(--accent); }
+
+        .nome-professor { 
+            font-weight: bold; 
+            color: var(--primary); 
+            padding: 5px 15px;
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* Área do Desenho Técnico */
+        #container-desenho { 
+            height: 40%; 
+            background: white; 
+            margin: 10px; 
+            border-radius: 8px; 
+            border: 2px solid #bdc3c7; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+        }
+        #img-desenho { max-height: 95%; max-width: 95%; object-fit: contain; }
+
+        /* Grade de Programação */
+        #area-programacao { 
+            flex: 1; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            padding: 15px; 
+            overflow-y: auto; 
+            background: #fff; 
+            margin: 0 10px; 
+            border-radius: 8px 8px 0 0; 
+            border: 1px solid #ddd; 
+        }
+        .coluna { display: flex; flex-direction: column; }
+        .linha-cnc { display: flex; align-items: center; margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; }
+        .n-label { width: 55px; font-family: 'Courier New', monospace; color: #7f8c8d; font-weight: bold; }
+        .input-cnc { 
+            flex: 1; 
+            border: none; 
+            padding: 6px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 16px; 
+            outline: none; 
+            text-transform: uppercase; 
+            color: #2980b9; 
+        }
+
+        /* Rodapé */
+        #footer { 
+            padding: 15px; 
+            background: #fff; 
+            border-top: 1px solid #ddd; 
+            display: flex; 
+            justify-content: flex-end; 
+            margin: 0 10px 10px 10px; 
+            border-radius: 0 0 8px 8px; 
+        }
+        .btn-save { background: #d35400; color: white; padding: 12px 35px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="sidebar-title">LISTA DE EXERCÍCIOS</div>
+        <div class="lista-exercicios" id="lista-botoes"></div>
+        <div class="logo-container">
+            <img src="logo.png" alt="CADCAM BRASIL" class="logo-empresa" onerror="this.src='logo.jpg'">
+        </div>
+    </div>
+
+    <div id="main">
+        <div class="header-exercicio">
+            <h2 id="tit-ex" style="margin:0; font-size: 1.1em; color: var(--primary);">Selecione</h2>
+            <input type="text" id="nome-aluno" class="input-aluno" placeholder="Digite seu nome completo...">
+            <span class="nome-professor">Profº Fernando</span>
+        </div>
+
+        <div id="container-desenho">
+            <img id="img-desenho" src="" alt="Desenho Técnico">
+        </div>
+
+        <div id="area-programacao">
+            <div class="coluna" id="col1"></div>
+            <div class="coluna" id="col2"></div>
+        </div>
+
+        <div id="footer">
+            <button class="btn-save" onclick="gerarTXT()">DESCARREGAR TXT</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. CONFIGURAÇÃO COM NOMES PARES E ÍMPARES
+        const exercicios = [
+            { id: 1, titulo: "Exercício 1 - EXTERNO", imagem: "ex1.jpg" },
+            { id: 2, titulo: "Exercício 2 - INTERNO", imagem: "ex2.jpg" },
+            { id: 3, titulo: "Exercício 3 - EXTERNO", imagem: "ex3.jpg" },
+            { id: 4, titulo: "Exercício 4 - INTERNO", imagem: "ex4.jpg" },
+            { id: 5, titulo: "Exercício 5 - EXTERNO", imagem: "ex5.jpg" },
+            { id: 6, titulo: "Exercício 6 - INTERNO", imagem: "ex6.jpg" },
+            { id: 7, titulo: "Exercício 7 - EXTERNO", imagem: "ex7.jpg" },
+            { id: 8, titulo: "Exercício 8 - INTERNO", imagem: "ex8.jpg" },
+            { id: 9, titulo: "Exercício 9 - EXTERNO", imagem: "ex9.jpg" },
+            { id: 10, titulo: "Exercício 10 - INTERNO", imagem: "ex10.jpg" }
+        ];
+
+        let exAtual = 1;
+
+        function criarMenu() {
+            const container = document.getElementById('lista-botoes');
+            exercicios.forEach(ex => {
+                const btn = document.createElement('button');
+                btn.className = 'ex-btn';
+                btn.id = `btn-${ex.id}`;
+                btn.innerText = ex.titulo;
+                btn.onclick = () => mudarExercicio(ex.id);
+                container.appendChild(btn);
+            });
+        }
+
+        function criarLinhas() {
+            const col1 = document.getElementById('col1');
+            const col2 = document.getElementById('col2');
+            let n = 10;
+            for (let i = 1; i <= 60; i++) {
+                const div = document.createElement('div');
+                div.className = 'linha-cnc';
+                div.innerHTML = `<span class="n-label">N${n}</span><input type="text" class="input-cnc">`;
+                if (i <= 30) col1.appendChild(div);
+                else col2.appendChild(div);
+                n += 10;
+            }
+        }
+
+        function mudarExercicio(id) {
+            exAtual = id;
+            document.querySelectorAll('.ex-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${id}`).classList.add('active');
+            
+            const ex = exercicios.find(e => e.id === id);
+            document.getElementById('tit-ex').innerText = ex.titulo;
+            document.getElementById('img-desenho').src = ex.imagem;
+            document.querySelectorAll('.input-cnc').forEach(input => input.value = "");
+        }
+
+        function gerarTXT() {
+            const nomeInput = document.getElementById('nome-aluno');
+            const nomeAluno = nomeInput.value.trim();
+            const exInfo = exercicios.find(e => e.id === exAtual);
+
+            if (nomeAluno === "") {
+                alert("⚠️ ATENÇÃO: Digite o seu NOME completo antes de descarregar!");
+                nomeInput.focus();
+                return;
+            }
+            
+            let conteudo = `CADCAM BRASIL - CADERNO CNC\n`;
+            conteudo += `ALUNO: ${nomeAluno}\n`;
+            conteudo += `OPERACÃO: ${exInfo.titulo}\n`;
+            conteudo += `------------------------------------------\n\n`;
+            
+            document.querySelectorAll('.input-cnc').forEach((input, index) => {
+                if(input.value.trim() !== "") {
+                    conteudo += `N${(index + 1) * 10} ${input.value.toUpperCase()}\n`;
+                }
+            });
+
+            const blob = new Blob([conteudo], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.download = `Exercicio_${exAtual}_${nomeAluno.replace(/ /g, "_")}.txt`;
+            link.href = window.URL.createObjectURL(blob);
+            link.click();
+        }
+
+        criarMenu();
+        criarLinhas();
+        mudarExercicio(1);
+    </script>
+</body>
+</html>
