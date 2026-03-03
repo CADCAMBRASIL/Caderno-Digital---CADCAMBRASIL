@@ -255,9 +255,10 @@
                 return;
             }
             
-            let conteudo = `CADCAM BRASIL - CADERNO CNC\n`;
+            let conteudo = `CADCAM BRASIL - CADERNO DE EXERCICIOS TORNO CNC\n`;
             conteudo += `ALUNO: ${nomeAluno}\n`;
             conteudo += `OPERACÃO: ${exInfo.titulo}\n`;
+            conteudo += `Prof.: Fernando\n`;
             conteudo += `------------------------------------------\n\n`;
             
             document.querySelectorAll('.input-cnc').forEach((input, index) => {
@@ -278,4 +279,5 @@
         mudarExercicio(1);
     </script>
 </body>
+
 </html>
