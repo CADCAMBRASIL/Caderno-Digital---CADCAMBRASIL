@@ -3,165 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caderno CNC - Profº Fernando - CADCAM BRASIL</title>
+    <title>Desafio CNC - Auto-Correção - CADCAM BRASIL</title>
     <style>
         :root { 
             --primary: #000000; 
-            --accent: #000000; 
+            --accent: #2ecc71; 
             --bg: #f4f7f6; 
+            --error: #ff4d4d; 
+            --industrial: #DCDCDC;
         }
 
         body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            display: flex; 
-            height: 100vh; 
-            margin: 0; 
-            background: var(--bg); 
-            overflow: hidden; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; height: 100vh; margin: 0; 
+            background: var(--bg); overflow: hidden; 
         }
         
         /* Barra Lateral */
         #sidebar { 
-            width: 250px; 
-            background: var(--primary); 
-            color: white; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            width: 200px; background: var(--primary); color: white; 
+            padding: 15px; display: flex; flex-direction: column; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
-        .sidebar-title {
-            text-align: center; 
-            border-bottom: 1px solid #FAFAFA; 
-            padding-bottom: 10px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .lista-exercicios {
-            flex: 1;
-            overflow-y: auto;
-        }
-
+        .lista-exercicios { flex: 1; overflow-y: auto; }
         .ex-btn { 
-            width: 100%;
-            padding: 10px; 
-            margin: 4px 0; 
-            background: #708090; 
-            border: none; 
-            color: white; 
-            cursor: pointer; 
-            text-align: left; 
-            border-radius: 4px; 
-            transition: 0.3s; 
-            font-size: 0.85em;
+            width: 100%; padding: 8px; margin: 4px 0; 
+            background: #333; border: none; color: white; 
+            cursor: pointer; text-align: left; border-radius: 4px; font-size: 0.8em;
         }
+        .active { background: var(--accent) !important; font-weight: bold; }
 
-        .ex-btn:hover { background: var(--accent); }
-        .active { background: var(--accent); font-weight: bold; }
-
-        .logo-container { 
-            padding-top: 20px; 
-            text-align: center;
-            border-top: 1px solid #FFFFFF;
-        }
-        .logo-empresa { max-width: 90%; height: auto; }
-
-        /* Painel Principal */
-        #main { flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        /* Estrutura Principal */
+        #main { flex: 1; display: flex; flex-direction: column; }
         
-        /* Cabeçalho */
-        .header-exercicio { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 20px; 
-            background: #DCDCDC;
-            border-bottom: 1px solid #ddd;
-            gap: 15px;
+        .header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 20px; background: var(--industrial); border-bottom: 2px solid #bbb;
         }
-        
-        .input-aluno {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+
+        /* Layout em Duas Colunas Principais */
+        #corpo-layout {
+            display: flex;
             flex: 1;
-            max-width: 350px;
-            outline: none;
-        }
-        .input-aluno:focus { border-color: var(--accent); }
-
-        .nome-professor { 
-            font-weight: bold; 
-            color: var(--primary); 
-            padding: 5px 15px;
-            border: 2px solid var(--accent);
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-
-        /* Área do Desenho Técnico */
-        #container-desenho { 
-            height: 40%; 
-            background: #DCDCDC; 
-            margin: 10px; 
-            border-radius: 8px; 
-            border: 2px solid #bdc3c7; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
             overflow: hidden;
+        }
+
+        /* Coluna Esquerda: Desenho (50% altura) + Instruções (50% altura) */
+        #coluna-visual {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            border-right: 2px solid #bbb;
+        }
+
+        #container-desenho { 
+            height: 50%; 
+            background: white; 
+            border-radius: 8px; border: 2px solid #bdc3c7; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         #img-desenho { max-height: 95%; max-width: 95%; object-fit: contain; }
 
-        /* Grade de Programação */
-        #area-programacao { 
-            flex: 1; 
+        #container-descricao {
+            height: 50%; 
+            background: white;
+            border-radius: 8px; border: 2px solid #bdc3c7;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        /* Coluna Direita: Programação (Dividida em 25% Aluno e 25% Gabarito) */
+        #area-trabalho { 
+            width: 50%;
             display: grid; 
             grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
-            padding: 15px; 
+            gap: 5px; padding: 10px; 
             overflow-y: auto; 
-            background: #DCDCDC; 
-            margin: 0 10px; 
-            border-radius: 8px 8px 0 0; 
-            border: 1px solid #ddd; 
+            background: #eee;
         }
-        .coluna { display: flex; flex-direction: column; }
-        .linha-cnc { display: flex; align-items: center; margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; }
-        .n-label { width: 55px; font-family: 'Courier New', monospace; color: #000000; font-weight: bold; }
-        .input-cnc { 
-            flex: 1; 
-            border: none; 
-            padding: 6px; 
-            font-family: 'Courier New', monospace; 
-            font-size: 16px; 
-            outline: none; 
-            text-transform: uppercase; 
-            color: #000000; 
-        font-weight: 900; /* Negrito extra forte */
-    font-size: 15px; /* Aumenta um pouco para ser mais nítido */
-}
 
-        /* Rodapé */
-        #footer { 
-            padding: 15px; 
-            background: #DCDCDC; 
-            border-top: 1px solid #ddd; 
-            display: flex; 
-            justify-content: flex-end; 
-            margin: 0 10px 10px 10px; 
-            border-radius: 0 0 8px 8px; 
+        .coluna-header {
+            font-weight: bold; text-align: center; padding: 5px;
+            background: #444; color: white; border-radius: 4px; margin-bottom: 8px;
+            font-size: 0.85em;
+            position: sticky; top: 0; z-index: 5;
         }
-        .btn-save { background: #000000; color: white; padding: 12px 35px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        .painel-aluno, .painel-gabarito { 
+            padding: 8px; border-radius: 5px; 
+            border: 1px solid #ccc; font-family: 'Courier New', monospace;
+            margin-bottom: 4px; min-height: 32px; display: flex; align-items: center;
+            font-size: 13px;
+        }
+
+        .painel-aluno { background: #fff; }
+        .painel-gabarito { background: #e9ecef; visibility: hidden; color: #495057; }
+
+        /* Estados de Revelação */
+        .revelado { visibility: visible !important; border: 1px solid #2ecc71; background: #d4edda; }
+        .revelado-erro { visibility: visible !important; border: 1px solid #dc3545; background: #f8d7da; }
+
+        .input-lacuna {
+            width: 60px; border: 2px solid #999; border-radius: 3px; 
+            text-align: center; font-weight: bold; font-size: 14px;
+            text-transform: uppercase; outline: none; margin: 0 2px;
+            background-color: white; transition: 0.3s;
+        }
+
+        .input-erro { border-color: var(--error) !important; background-color: #ffe6e6 !important; color: #cc0000; }
+        .input-sucesso { border-color: var(--accent) !important; background-color: #e6ffed !important; color: #006622; }
+
+        .logo-container { padding-top: 15px; text-align: center; border-top: 1px solid #FFFFFF; }
+        .logo-empresa { max-width: 80%; height: auto; }
+
+        #footer { padding: 10px; background: var(--industrial); display: flex; justify-content: flex-end; border-top: 2px solid #bbb; }
+        .btn-save { background: #000; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="sidebar">
-        <div class="sidebar-title">LISTA DE EXERCÍCIOS</div>
+        <div class="sidebar-title">EXERCÍCIOS</div>
         <div class="lista-exercicios" id="lista-botoes"></div>
         <div class="logo-container">
             <img src="logo.png" alt="CADCAM BRASIL" class="logo-empresa" onerror="this.src='logo.jpg'">
@@ -169,116 +135,240 @@
     </div>
 
     <div id="main">
-        <div class="header-exercicio">
-            <h2 id="tit-ex" style="margin:0; font-size: 1.1em; color: var(--primary);">Selecione</h2>
-            <input type="text" id="nome-aluno" class="input-aluno" placeholder="Digite seu nome completo...">
-            <span class="nome-professor">Profº Fernando</span>
+        <div class="header">
+            <h2 id="tit-ex" style="margin:0; font-size: 1.1em;">Selecione o Treino</h2>
+            <input type="text" id="nome-aluno" placeholder="NOME DO ALUNO" style="padding:6px; width:200px;">
+            <span style="font-weight:bold; border:1px solid #000; padding:4px 12px; border-radius:20px; font-size: 0.9em;">Profº Fernando</span>
         </div>
 
-        <div id="container-desenho">
-            <img id="img-desenho" src="" alt="Desenho Técnico">
-        </div>
+        <div id="corpo-layout">
+            <div id="coluna-visual">
+                <div id="container-desenho">
+                    <img id="img-desenho" src="" alt="Desenho Técnico">
+                </div>
+                <div id="container-descricao">
+                    <h4 style="margin-top:0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Instruções de Trabalho</h4>
+                    <div id="texto-descricao">
+                        </div>
+                </div>
+            </div>
 
-        <div id="area-programacao">
-            <div class="coluna" id="col1"></div>
-            <div class="coluna" id="col2"></div>
+            <div id="area-trabalho">
+                <div>
+                    <div class="coluna-header">SUA PROGRAMAÇÃO</div>
+                    <div id="container-aluno"></div>
+                </div>
+                <div>
+                    <div class="coluna-header">GABARITO</div>
+                    <div id="container-gabarito"></div>
+                </div>
+            </div>
         </div>
 
         <div id="footer">
-            <button class="btn-save" onclick="gerarTXT()">BAIXAR TXT</button>
+            <button class="btn-save" onclick="gerarTXT()">BAIXAR TXT FINAL</button>
         </div>
     </div>
 
     <script>
-        // 1. CONFIGURAÇÃO COM NOMES PARES E ÍMPARES
-        const exercicios = [
-            { id: 1, titulo: "Exercício 1 - EXTERNO", imagem: "ex1.jpg" },
-            { id: 2, titulo: "Exercício 2 - INTERNO", imagem: "ex2.jpg" },
-            { id: 3, titulo: "Exercício 3 - EXTERNO", imagem: "ex3.jpg" },
-            { id: 4, titulo: "Exercício 4 - INTERNO", imagem: "ex4.jpg" },
-            { id: 5, titulo: "Exercício 5 - EXTERNO", imagem: "ex5.jpg" },
-            { id: 6, titulo: "Exercício 6 - INTERNO", imagem: "ex6.jpg" },
-            { id: 7, titulo: "Exercício 7 - EXTERNO", imagem: "ex7.jpg" },
-            { id: 8, titulo: "Exercício 8 - INTERNO", imagem: "ex8.jpg" },
-            { id: 9, titulo: "Exercício 9 - EXTERNO", imagem: "ex9.jpg" },
-            { id: 10, titulo: "Exercício 10 - INTERNO", imagem: "ex10.jpg" }
-        ];
+        const programasTreino = {
+            1: {
+                descricao: `
+                    <b>Processo:</b> Desbaste e Acabamento Externo.<br>
+                    1. Material Aço 1020.<br>
+                    2. Ferramentas: T0101 ; TNMG 160408/Desbaste e T0202 ; VCMT 160404/Acabamento.<br>
+                    3. VC: TNMG 160408 = 220 / VCMT 160404 = 250
+                    4. Rotação Maxima: Para Desbaste 2000 RPM / Para Acabamento 2500RPM.<br>
+                    5. AP: Para Desbaste 2mm No Raio.<br>
+                    6. Avanço: Para Desbaste 0.25 / Para Acabamento 0.12
+                    7. Posição Segura Para Troca De Ferramenta: X200 Z200.<br>
+                    8. Origem De Trabalho: G54.<br>
+                    9. Sobremetal Para Acabamento: No Eixo X = 1mm / No Eixo Z = 0.05mm.<br>
+                    10. Ciclo de Desbaste Longitudinal G71.<br>
+                    11. Ciclo De Acabamento G70.<br>
+                `,
+                linhas: [
+                    { n: "N10", texto: "o[lacuna]", resp:["0001"], original: "O0001" },
+                    { n: "N20", texto: "G[lacuna] G[lacuna] G[lacuna] G[lacuna]", resp:["21","40","90","95"], original: "G21 G40 G90 G95" },
+                    { n: "N30", texto: "G[lacuna] G[lacuna] X[lacuna] Z[lacuna]", resp:["54","0","200","200"], original: "G54 G0 X200 Z200" },
+                    { n: "N40", texto: "T[lacuna] ", resp:["0101"], original: "T0101" },
+                    { n: "N50", texto: "G[lacuna] ", resp:["54"], original: "G54" },
+                    { n: "N60", texto: "G[lacuna] S[lacuna]", resp:["96","200"], original: "G96 S200" },
+                    { n: "N70", texto: "G[lacuna] S[lacuna] M[lacuna]", resp:["92","2000","4" ], original: "G92 S2000 M4" },
+                    { n: "N80", texto: "G0 X[lacuna] Z[lacuna] ", resp:["52","2"], original: "G0 X52 Z2" },
+                    { n: "N90", texto: "G71 U[lacuna] R[lacuna] ", resp:["2","1"], original: "G71 U2 R1" },
+                    { n: "N100", texto: "G71P[lacuna] Q[lacuna] U[lacuna] W[lacuna] F[lacuna]", resp:["110","210","1","0.05","0.25"], original: "G71 P110 Q210 U1 W0.05 F0.25" },
+                    { n: "N110", texto: "G0 X[lacuna] Z[lacuna] ", resp:["22","2"], original: "G0 X22 Z2" },
+                    { n: "N120", texto: "G1 Z[lacuna] F[lacuna] ", resp:["0","0.12"], original: "G1 Z0 F0.12" },
+                    { n: "N130", texto: "X[lacuna] Z[lacuna] ", resp:["24","-1"], original: "X24 Z-1" },
+                    { n: "N140", texto: "Z[lacuna] ", resp:["-20"], original: "Z-20" },
+                    { n: "N150", texto: "X[lacuna] ", resp:["30"], original: "X30" },
+                    { n: "N160", texto: "Z[lacuna] ", resp:["-30"], original: "Z-30" },
+                    { n: "N170", texto: "X[lacuna] Z[lacuna] ", resp:["38","-49"], original: "X38 Z-39" },
+                    { n: "N180", texto: "Z[lacuna] ", resp:["-77"], original: "Z-77" },
+                    { n: "N190", texto: "X[lacuna]", resp:["46"], original: "X46" },
+                    { n: "N200", texto: "X[lacuna] Z[lacuna] ", resp:["50","-79"], original: "X50 Z-79" },
+                    { n: "N210", texto: "X[lacuna] ", resp:["52"], original: "X52" },
+                    { n: "N220", texto: "G[lacuna] G[lacuna] X[lacuna] Z[lacuna] ", resp:["54","0","200","200"], original: "G54 G0 X200 Z200" },
+                    { n: "N230", texto: "M[lacuna] ", resp:["30"], original: "M30" }
+                ]
+            },
+            2: { descricao: "Instruções do Exercício 2...", linhas: [] },
+            3: { descricao: "Instruções do Exercício 3...", linhas: [] },
+            // ... continuar até o 10
+        };
+
+        const exercicios = Array.from({length: 10}, (_, i) => ({
+            id: i + 1,
+            titulo: `Exercicio ${i + 1} - ${ (i+1) % 2 === 0 ? 'INTERNO' : 'EXTERNO' }`,
+            imagem: `ex${i + 1}.jpg`
+        }));
 
         let exAtual = 1;
-
-        function criarMenu() {
-            const container = document.getElementById('lista-botoes');
-            exercicios.forEach(ex => {
-                const btn = document.createElement('button');
-                btn.className = 'ex-btn';
-                btn.id = `btn-${ex.id}`;
-                btn.innerText = ex.titulo;
-                btn.onclick = () => mudarExercicio(ex.id);
-                container.appendChild(btn);
-            });
-        }
-
-        function criarLinhas() {
-            const col1 = document.getElementById('col1');
-            const col2 = document.getElementById('col2');
-            let n = 10;
-            for (let i = 1; i <= 60; i++) {
-                const div = document.createElement('div');
-                div.className = 'linha-cnc';
-                div.innerHTML = `<span class="n-label">N${n}</span><input type="text" class="input-cnc">`;
-                if (i <= 30) col1.appendChild(div);
-                else col2.appendChild(div);
-                n += 10;
-            }
-
-        }
 
         function mudarExercicio(id) {
             exAtual = id;
             document.querySelectorAll('.ex-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${id}`).classList.add('active');
-            
+            const btnAtivo = document.getElementById(`btn-${id}`);
+            if(btnAtivo) btnAtivo.classList.add('active');
+
             const ex = exercicios.find(e => e.id === id);
             document.getElementById('tit-ex').innerText = ex.titulo;
             document.getElementById('img-desenho').src = ex.imagem;
-            document.querySelectorAll('.input-cnc').forEach(input => input.value = "");
+
+            const containerAluno = document.getElementById('container-aluno');
+            const containerGabarito = document.getElementById('container-gabarito');
+            const textoDesc = document.getElementById('texto-descricao');
+            
+            containerAluno.innerHTML = ""; containerGabarito.innerHTML = "";
+            
+            const dadosEx = programasTreino[id] || { descricao: "Sem instruções", linhas: [] };
+            textoDesc.innerHTML = dadosEx.descricao;
+
+            dadosEx.linhas.forEach((linha, lIdx) => {
+                const divA = document.createElement('div');
+                divA.className = 'painel-aluno';
+                
+                let htmlA = `<b style="color:red; width:45px; display:inline-block">${linha.n}</b> `;
+                let partes = linha.texto.split('[lacuna]');
+                partes.forEach((p, i) => {
+                    htmlA += p;
+                    if (i < partes.length - 1) {
+                        htmlA += `<input type="text" class="input-lacuna" data-lin="${lIdx}" data-resp="${linha.resp[i]}" onchange="verificar(this)">`;
+                    }
+                });
+                divA.innerHTML = htmlA;
+                containerAluno.appendChild(divA);
+
+                const divG = document.createElement('div');
+                divG.className = 'painel-gabarito';
+                divG.id = `gab-${lIdx}`;
+                divG.innerHTML = `<b>${linha.n}</b> ${linha.original}`;
+                containerGabarito.appendChild(divG);
+            });
         }
 
-        function gerarTXT() {
-            const nomeInput = document.getElementById('nome-aluno');
-            const nomeAluno = nomeInput.value.trim();
-            const exInfo = exercicios.find(e => e.id === exAtual);
+        function verificar(input) {
+            const val = input.value.toUpperCase().trim();
+            const resp = input.dataset.resp.toUpperCase();
+            const linId = input.dataset.lin;
+            const pai = input.parentElement;
+            const gabDiv = document.getElementById(`gab-${linId}`);
 
-            if (nomeAluno === "") {
-                alert("⚠️ ATENÇÃO: Digite o seu NOME completo antes de descarregar!");
-                nomeInput.focus();
-                return;
+            if (val === resp) {
+                input.classList.remove('input-erro');
+                input.classList.add('input-sucesso');
+                input.disabled = true;
+            } else {
+                input.classList.add('input-erro');
+                input.classList.remove('input-sucesso');
+                input.select();
             }
-            
-            let conteudo = `CADCAM BRASIL - CADERNO DE EXERCICIOS TORNO CNC\n`;
-            conteudo += `ALUNO: ${nomeAluno}\n`;
-            conteudo += `OPERACÃO: ${exInfo.titulo}\n`;
-            conteudo += `PROF.: Fernando\n`;
-            conteudo += `------------------------------------------\n\n`;
-            
-            document.querySelectorAll('.input-cnc').forEach((input, index) => {
-                if(input.value.trim() !== "") {
-                    conteudo += `N${(index + 1) * 10} ${input.value.toUpperCase()}\n`;
+
+            const lacunasDaLinha = Array.from(pai.querySelectorAll('.input-lacuna'));
+            const todasPreenchidas = lacunasDaLinha.every(inp => inp.value.trim() !== "");
+            const todasCertas = lacunasDaLinha.every(inp => inp.disabled);
+
+            if (todasPreenchidas) {
+                if (todasCertas) {
+                    gabDiv.classList.add('revelado');
+                    gabDiv.classList.remove('revelado-erro');
+                    focarProximaLinha(input);
+                } else {
+                    gabDiv.classList.add('revelado-erro');
                 }
+            }
+        }
+
+        function focarProximaLinha(atual) {
+            const todosInputs = Array.from(document.querySelectorAll('.input-lacuna'));
+            const index = todosInputs.indexOf(atual);
+            if (index < todosInputs.length - 1) {
+                todosInputs[index + 1].focus();
+            }
+        }
+
+        function criarMenu() {
+            const menu = document.getElementById('lista-botoes');
+            exercicios.forEach(ex => {
+                const b = document.createElement('button');
+                b.className = 'ex-btn'; b.id = `btn-${ex.id}`; b.innerText = ex.titulo;
+                b.onclick = () => mudarExercicio(ex.id);
+                menu.appendChild(b);
+            });
+        }
+
+         function gerarTXT() {
+    const nome = document.getElementById('nome-aluno').value.trim();
+    const descricaoOriginal = document.getElementById('texto-descricao').innerText; // Pega o texto da descrição
+
+    if (!nome) { 
+        alert("⚠️ Nome do aluno é obrigatório!"); 
+        return; 
+    }
+
+    // Cabeçalho do arquivo
+    let txt = `CADCAM BRASIL - RELATÓRIO DE TREINAMENTO\n`;
+    txt += `------------------------------------------\n`;
+    txt += `ALUNO: ${nome}\n`;
+    txt += `EXERCÍCIO: ${exAtual}\n`;
+    txt += `PROF.: Fernando\n`;
+    txt += `DATA: ${new Date().toLocaleDateString()}\n`;
+    txt += `------------------------------------------\n\n`;
+
+    // Incluindo a Descrição/Instruções no TXT
+    txt += `INSTRUÇÕES DE TRABALHO:\n`;
+    txt += `${descricaoOriginal}\n`;
+    txt += `------------------------------------------\n\n`;
+
+    txt += `INÍCIO DO PROGRAMA CNC:\n`;
+    txt += `------------------------------------------\n\n`;
+
+    // Capturando as linhas de programação
+    document.querySelectorAll('.painel-aluno').forEach(linha => {
+        let textoLinha = "";
+        linha.childNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                textoLinha += node.textContent;
+            } else if (node.tagName === "INPUT") {
+                textoLinha += node.value;
+            } else if (node.classList && (node.classList.contains('n-label') || node.tagName === "B")) {
+                textoLinha += node.innerText + " ";
+            }
+        });
+        txt += textoLinha.replace(/\s+/g, ' ').trim() + "\n";
             });
 
-            const blob = new Blob([conteudo], { type: "text/plain" });
-            const link = document.createElement("a");
-            link.download = `Exercicio_${exAtual}_${nomeAluno.replace(/ /g, "_")}.txt`;
-            link.href = window.URL.createObjectURL(blob);
-            link.click();
-        }
+    // Processo de download
+    const blob = new Blob([txt], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.download = `Relatorio_CNC_Ex${exAtual}_${nome.replace(/ /g, '_')}.txt`;
+    a.href = window.URL.createObjectURL(blob);
+    a.click();
+}
 
         criarMenu();
-        criarLinhas();
         mudarExercicio(1);
     </script>
 </body>
-
 </html>
-
